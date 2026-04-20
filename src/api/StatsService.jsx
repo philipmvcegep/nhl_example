@@ -1,4 +1,5 @@
 const PROXY = "https://api.allorigins.win/raw?url=";
+// const PROXY = "https://corsproxy.io/?";
 const BASE_STATS_URL = "https://api-web.nhle.com/v1/club-stats/";
 
 export const StatsService = {
