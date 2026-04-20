@@ -10,6 +10,7 @@ const ShotTable = function ({ plays }) {
       <thead >
         <tr>
           <th>Ordre</th>
+          <th>Équipe</th>
           <th>Type</th>
           <th>ID Joueur</th>
           <th>Position (X, Y)</th>
@@ -19,6 +20,10 @@ const ShotTable = function ({ plays }) {
         {plays.map((play) => (
           <tr key={play.id} className={play.type === 'goal' ? 'row-goal' : ''}>
             <td><strong>#{play.id}</strong></td>
+            <td className="team-cell">
+              <img src={play.teamLogo} alt={play.teamAbbrev} className="mini-logo" />
+              <span className="team-abbrev">{play.teamAbbrev}</span>
+            </td>
             <td>
               <span className={`badge badge-${play.type === 'goal' ? 'goal' : 'shot'}`}>
                 {play.type === 'goal' ? '🚨 GOAL' : play.type.replace('-shot', '')}

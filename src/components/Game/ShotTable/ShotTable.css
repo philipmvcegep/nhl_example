@@ -33,7 +33,32 @@
 .row-goal .badge-goal {
   animation: goal-pulse 2s infinite;
 }
+/* La cellule qui contient Logo + Texte */
+.team-cell {
+  display: flex;
+  align-items: center; /* Centre verticalement le logo et le texte */
+  gap: 12px;           /* Espace entre le logo et l'abréviation */
+  padding: 8px 12px;   /* Un peu d'air */
+  min-width: 100px;    /* Évite que la colonne saute */
+}
 
+.mini-logo {
+  width: 60px;  /* Teste une taille plus grande */
+  height: 60px;
+}
+
+.team-abbrev {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  color: var(--habs-blue);
+  font-size: 0.9rem;
+}
+
+/* Force l'alignement vertical du texte dans les autres colonnes */
+.nhl-table td {
+  vertical-align: middle; 
+  height: 50px; /* On force une hauteur de ligne constante */
+}
 @keyframes goal-pulse {
   0% {
     opacity: 1;
