@@ -1,4 +1,4 @@
-const PROXY = "https://corsproxy.io/?";
+const PROXY = "https://api.allorigins.win/raw?url=";
 const BASE_STATS_URL = "https://api-web.nhle.com/v1/club-stats/";
 
 export const StatsService = {
@@ -17,7 +17,6 @@ export const StatsService = {
             // On transforme pour ne garder que l'essentiel et on trie par points
             return json.skaters
                 .sort((a, b) => b.points - a.points)
-                .slice(0, 15) // On prend le top 15
                 .map(s => ({
                     id: s.playerId,
                     firstName: s.firstName.default,

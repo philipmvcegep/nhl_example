@@ -26,8 +26,8 @@ export const Stats = () => {
     return (
         <div className="stats-page">
             <header className="stats-header">
-                <h2>Leaders de l'équipe</h2>
-                <p>Saison Régulière 2025-2026</p>
+                <h2>{players[0]?.gamesPlayed <= 5 ? "Stats des Séries" : "Saison Régulière"}</h2>
+                <p>Équipe : Canadiens de Montréal</p>
             </header>
 
             <div className="table-wrapper">

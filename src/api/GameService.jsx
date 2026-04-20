@@ -1,27 +1,29 @@
-const PROXY = "https://corsproxy.io/?";
-const GAME_ID = "2025021248";
-const BASE_URL = `https://api-web.nhle.com/v1/gamecenter/${GAME_ID}/play-by-play`;
+// 1. REMOVE the PROXY constant. 
+// 2. Ensure your BASE_URL matches your vite.config.js target
+const GAME_ID = "2025030121";
+const BASE_URL = `/nhl-api/v1/gamecenter/${GAME_ID}/play-by-play`;
 
 const VALID_PLAY_TYPES = ['shot-on-goal', 'blocked-shot', 'missed-shot', 'goal'];
 
-/**
- * GameService - Service centralisé pour les données NHL
- */
 export const GameService = {
-
-    /**
-     * Récupère les événements de tir formatés pour le match actuel
-     * @returns {Promise<Array>} Liste d'objets 'play' simplifiés
-     */
     getGameShots: async () => {
         try {
-            const response = await fetch(PROXY + BASE_URL);
+            // Fetch directly from the Vite proxy path
+            const response = await fetch(BASE_URL);
 
             if (!response.ok) {
+                // If it's a 403 or 404, we catch it here before json() crashes
+                const errorBody = await response.text();
+                console.error("Détails de l'erreur:", errorBody);
                 throw new Error(`Erreur réseau (Statut: ${response.status})`);
             }
 
             const json = await response.json();
+
+            // Verification to prevent crashes if the API structure changes
+            if (!json.homeTeam || !json.awayTeam) {
+                throw new Error("Données d'équipes manquantes dans la réponse API");
+            }
 
             const teamsLookup = {
                 [json.homeTeam.id]: {
@@ -36,29 +38,23 @@ export const GameService = {
                 }
             };
 
-            // On s'assure que 'plays' existe avant de mapper
-            if (!json.plays) return [];
+            if (!json.plays) return { shots: [], teamsLookup };
 
             const shots = GameService._transformData(json.plays, teamsLookup);
 
-            return { shots, teamsLookup }; // On retourne les deux !
+            return { shots, teamsLookup };
 
         } catch (error) {
             console.error("Erreur lors du fetch NHL:", error);
-            throw error; // On laisse le composant gérer l'affichage de l'erreur
+            throw error; 
         }
     },
 
-    /**
-     * Nettoie et formate les données brutes de l'API
-     * @private (on met _ devant en js ou python pour le simuler)
-     */
     _transformData: (plays, teamsLookup) => {
         return plays
             .filter(p => VALID_PLAY_TYPES.includes(p.typeDescKey))
             .map(p => {
-                // On force p.eventOwnerTeamId en Number pour matcher les clés du lookup
-                const teamId = Number(p.details.eventOwnerTeamId);
+                const teamId = Number(p.details?.eventOwnerTeamId);
                 const teamInfo = teamsLookup[teamId] || { abbrev: '???' };
 
                 return {
@@ -71,4 +67,5 @@ export const GameService = {
                     y: p.details?.yCoord ?? 0
                 };
             });
-    }}
+    }
+};
