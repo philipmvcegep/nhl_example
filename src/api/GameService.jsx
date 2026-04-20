@@ -5,9 +5,9 @@ const BASE_URL = `https://api-web.nhle.com/v1/gamecenter/${GAME_ID}/play-by-play
 const VALID_PLAY_TYPES = ['shot-on-goal', 'blocked-shot', 'missed-shot', 'goal'];
 
 /**
- * ApiService - Service centralisé pour les données NHL
+ * GameService - Service centralisé pour les données NHL
  */
-export const ApiService = {
+export const GameService = {
 
     /**
      * Récupère les événements de tir formatés pour le match actuel
@@ -26,7 +26,7 @@ export const ApiService = {
             // On s'assure que 'plays' existe avant de mapper
             if (!json.plays) return [];
 
-            return ApiService._transformData(json.plays);
+            return GameService._transformData(json.plays);
 
         } catch (error) {
             console.error("Erreur lors du fetch NHL:", error);

@@ -1,47 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { ApiService } from './components/ApiService/ApiService.jsx';
-import ShotTable from './components/ShotTable/ShotTable.jsx';
+// src/App.jsx
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Game } from './pages/GamePage.jsx';
+import './App.css';
 
 function App() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  return (
+    <Router>
+      <div className="app-container">
+        <h1 className="app-title">Habs Dashboard 🏒</h1>
+        
+        {/* Simple Navbar pour commencer */}
+        <nav className="stats-summary">
+          <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>Live Match</Link>
+          <Link to="/stats" style={{ color: 'inherit', textDecoration: 'none', marginLeft: '20px' }}>Statistiques</Link>
+        </nav>
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const shots = await ApiService.getGameShots();
-        setData(shots);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, []);
+        <hr style={{ borderColor: 'var(--habs-blue)', margin: '20px 0' }} />
 
-
-  if (loading) return <div className="status">Chargement des statistiques...</div>;
-
-  if (error) return (
-    <div style={{ color: 'red', padding: '20px', border: '1px solid red' }}>
-      <h3>Erreur de récupération</h3>
-      <p>{error}</p>
-    </div>
-  );
-
-return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-      <h1>Habs Live Tracker 🏒</h1>
-      
-      <header style={{ marginBottom: '20px' }}>
-        <strong>Événements trouvés :</strong> {data.length}
-      </header>
-
-      {/* On délègue tout l'affichage de la table ici */}
-      <ShotTable plays={data} />
-    </div>
+        <Routes>
+          <Route path="/" element={<Game />} />
+          <Route path="/stats" element={<div>À venir : Page de Statistiques</div>} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
