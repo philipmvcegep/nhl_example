@@ -1,4 +1,5 @@
 import React from 'react';
+import './ShotTable.css';
 
 // Composant pur : Données en entrée -> UI en sortie
 const  ShotTable = function({ plays }){
@@ -6,7 +7,7 @@ const  ShotTable = function({ plays }){
 
   return (
     <table border="1" style={{ width: '100%', borderCollapse: 'collapse' }}>
-      <thead style={{ background: '#eee' }}>
+      <thead >
         <tr>
           <th>Ordre</th>
           <th>Type</th>
@@ -16,14 +17,19 @@ const  ShotTable = function({ plays }){
       </thead>
       <tbody>
         {plays.map((play) => (
-          <tr key={play.id}>
-            <td>{play.id}</td>
-            <td style={{ fontWeight: play.type === 'goal' ? 'bold' : 'normal' }}>
-              {play.type} {play.type === 'goal' ? '🚨' : ''}
-            </td>
-            <td>{play.playerId}</td>
-            <td>{play.x}, {play.y}</td>
-          </tr>
+          <tr key={play.id} className={play.type === 'goal' ? 'row-goal' : ''}>
+              <td><strong>#{play.id}</strong></td>
+              <td>
+                <span className={`badge badge-${play.type === 'goal' ? 'goal' : 'shot'}`}>
+                  {play.type === 'goal' ? '🚨 GOAL' : play.type.replace('-shot', '')}
+                </span>
+              </td>
+              <td>Joueur {play.playerId}</td>
+              <td className="coords-text">
+                <span className="coord-badge">X: {play.x}</span>
+                <span className="coord-badge">Y: {play.y}</span>
+              </td>
+            </tr>
         ))}
       </tbody>
     </table>

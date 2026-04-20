@@ -1,0 +1,66 @@
+/* Système de badges raffiné */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 800;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Le But : Rouge Habs, vibrant */
+.badge-goal { 
+  background-color: var(--habs-red); 
+  color: white;
+  box-shadow: 0 0 10px rgba(175, 30, 45, 0.4);
+}
+
+/* Le Tir cadré : Bleu marin, sobre */
+.badge-shot-on-goal { 
+  background-color: var(--habs-blue); 
+  color: white; 
+}
+
+/* Les autres (missed/blocked) : Gris acier / Silver */
+.badge-missed-shot, 
+.badge-blocked-shot { 
+  background-color: var(--habs-silver); 
+  color: #444; 
+}
+
+/* Animation subtile uniquement pour les buts */
+.row-goal .badge-goal {
+  animation: goal-pulse 2s infinite;
+}
+
+@keyframes goal-pulse {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.nhl-table thead th {
+  background-color: var(--habs-blue); /* Ton bleu marin */
+  color: white;
+  padding: 16px 12px;
+  text-align: left;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  border: none;
+  /* Une petite bordure subtile entre les colonnes si tu veux */
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nhl-table thead th:last-child {
+  border-right: none;
+}
+
+/* On arrondit les coins du header via le wrapper */
+.table-wrapper {
+  border: 2px solid var(--habs-blue); /* Rappel du bleu sur la bordure extérieure */
+  border-radius: 8px;
+  overflow: hidden;
+}
