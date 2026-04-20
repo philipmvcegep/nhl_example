@@ -2,10 +2,9 @@
 :root {
   --habs-red: #AF1E2D;
   --habs-blue: #192168;
-  --bg-dark: #1a1a1a;
+  --habs-dark-blue: #0f143c;
+  /* Nouveau pour les dégradés */
   --habs-silver: #A2AAAD;
-  --bg-light: #f4f7f6;
-  --text-main: #2d3436;
   --white: #ffffff;
 }
 
@@ -26,8 +25,9 @@ body {
   font-weight: 900;
   margin-bottom: 5px;
   text-transform: uppercase;
-  letter-spacing: -1px; /* Look plus moderne/compact */
-  text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
+  letter-spacing: -1px;
+  /* Look plus moderne/compact */
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.05);
 }
 
 .stats-summary {
@@ -65,7 +65,7 @@ body {
   border-radius: 12px;
   text-align: center;
   padding: 80px 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   font-size: 1.2rem;
   color: var(--habs-silver);
 }
