@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ApiService } from './components/ApiService/ApiService.jsx';
 
 function App() {
   const [data, setData] = useState([]);
@@ -6,77 +7,59 @@ function App() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // LE PROXY : On garde celui-là, c'est le plus propre visuellement
-    const PROXY = "https://corsproxy.io/?";
-    const API_URL = "https://api-web.nhle.com/v1/gamecenter/2025021248/play-by-play";
-
-    fetch(PROXY + API_URL)
-      .then((response) => {
-        if (!response.ok) throw new Error("Le proxy est saturé (Erreur " + response.status + ")");
-        return response.json();
-      })
-      .then((json) => {
-        // ON FILTRE : On garde shots et goals
-        const cleanData = json.plays
-          .filter(p => p.typeDescKey === 'shot-on-goal' ||  p.typeDescKey === 'blocked-shot' || p.typeDescKey === 'missed-shot' || p.typeDescKey === 'goal')
-          .map(p => ({
-            id: p.sortOrder,
-            type: p.typeDescKey,
-            player: p.details?.shootingPlayerId || "Inconnu",
-            x: p.details?.xCoord,
-            y: p.details?.yCoord
-          }));
-
-        setData(cleanData);
-        setLoading(false);
-      })
-      .catch((err) => {
+    // On définit une fonction asynchrone interne pour utiliser le Controller
+    const loadData = async () => {
+      try {
+        const shots = await ApiService.getGameShots();
+        setData(shots);
+      } catch (err) {
         setError(err.message);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    loadData();
   }, []);
 
+  // Gestion des états d'affichage (Early Returns)
+  if (loading) return <div className="status">Chargement des statistiques...</div>;
+  
+  if (error) return (
+    <div style={{ color: 'red', padding: '20px', border: '1px solid red' }}>
+      <h3>Erreur de récupération</h3>
+      <p>{error}</p>
+    </div>
+  );
+
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-      <h1>Habs Live Data Fetch 🏒</h1>
+    <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
+      <h1>Habs Live Tracker 🏒</h1>
+      
+      <header style={{ marginBottom: '20px' }}>
+        <strong>Tirs et buts compilés :</strong> {data.length}
+      </header>
 
-      {loading && <p>Chargement des données NHL...</p>}
-
-      {error && (
-        <div style={{ color: 'red', border: '1px solid red', padding: '10px' }}>
-          <strong>Erreur :</strong> {error}
-          <br />
-          <small>Essaye de rafraîchir la page (F5)</small>
-        </div>
-      )}
-
-      {!loading && !error && (
-        <>
-          <h3>Tirs compilés : {data.length}</h3>
-          <table border="1" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-            <thead style={{ background: '#f4f4f4' }}>
-              <tr>
-                <th>ID</th>
-                <th>Type</th>
-                <th>Player ID</th>
-                <th>X</th>
-                <th>Y</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.id}</td>
-                  <td>{item.type}</td>
-                  <td>{item.player}</td>
-                  <td>{item.x}</td>
-                  <td>{item.y}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </>
-      )}
+      <table border="1" style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead style={{ background: '#eee' }}>
+          <tr>
+            <th>Ordre</th>
+            <th>Type</th>
+            <th>ID Joueur</th>
+            <th>Position (X, Y)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((play) => (
+            <tr key={play.id}>
+              <td>{play.id}</td>
+              <td>{play.type}</td>
+              <td>{play.playerId}</td>
+              <td>{play.x}, {play.y}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
